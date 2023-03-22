@@ -44,7 +44,7 @@ export type categoryType = 'All' | 'Art' | 'Biography' | 'Computers' | 'History'
 
 export interface IsGetSearchResult {
   intitle: string | undefined;
-  category?: categoryType;
+  category: categoryType;
   pagination: paginationType;
   sort: sortType;
   APIKey: string

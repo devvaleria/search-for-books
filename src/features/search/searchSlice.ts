@@ -1,3 +1,4 @@
+import { useAppDispatch } from './../../app/hooks';
 import { searchAPI } from "./searchAPI";
 import {
   PayloadAction,
@@ -55,13 +56,39 @@ export const getSelectedBook = createAsyncThunk(
   }
 );
 
+export const getUsersAPIKey = createAsyncThunk(
+  'users/fetchByIdStatus',
+  (APIKey: string, { dispatch }) => {
+    if (!APIKey) {
+      if (document.cookie.includes('APIKey=')){
+        const indexOfAPIKey = (document.cookie.indexOf('APIKey='))
+        const APIKeyCookie = document.cookie.slice(7 + indexOfAPIKey).split(';')[0]
+        dispatch(setAPIKey(APIKeyCookie))
+      }
+      else {
+        let APIKeyPrompt: string | null = "";
+        while (!APIKeyPrompt) {
+          APIKeyPrompt = prompt('Enter your API key. Info: https://developers.google.com/books/docs/v1/using?hl=en#APIKey')
+          if (APIKeyPrompt) {
+          dispatch(setAPIKey(APIKeyPrompt))
+          document.cookie = ("APIKey="+APIKeyPrompt)}
+        }
+      }
+    }
+    else {
+      dispatch(setAPIKey(APIKey))
+      document.cookie = ("APIKey="+APIKey)}
+    }
+);
+
 export const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    setSelectedBook: (state, action: PayloadAction<string>) => {
-      
+    setAPIKey: (state, action: PayloadAction<string>) => {
+      state.APIKey = action.payload
     },
+    
   },
   extraReducers: (builder) => {
     builder.addCase(getSearchResult.pending, (state) => {
@@ -113,5 +140,5 @@ export const searchSlice = createSlice({
   },
 });
 
-export const { setSelectedBook } = searchSlice.actions;
+export const { setAPIKey } = searchSlice.actions;
 export default searchSlice.reducer;
