@@ -1,53 +1,68 @@
 export interface IsSearchState {
-    foundData: {
-        pagination: paginationType
-        books: Array<bookType>,
-        totalItems: number
-    },
-    selectedBookId: string | undefined,
-    status: 'idle' | 'loading' | 'failed';
-    APIKey: string
+  foundData: {
+    pagination: paginationType;
+    books: Array<bookCardType>;
+    totalItems: number | undefined;
+  };
+  selectedBook: selectedBookType | undefined;
+  status: "idle" | "loading" | "failed";
+  APIKey: string;
+  categories: Array<categoryType>
+  sortValues: Array<sortType>
 }
 
-export type paginationType = {
-    startIndex: number
-    maxResults: number
-}
-
-export type bookType = {
+export type selectedBookType = {
     id: string;
     title: string;
+    categories: Array<categoryType>;
     authors: Array<string>;
-    categories: Array<string>
-    description: string
+    description: string;
     imageLinks: {
-        small: string;
-        medium: string;
         large: string;
+        medium: string;
+        small: string;
     };
 }
 
+export type bookCardType = {
+    id: string;
+    title: string;
+    authors: Array<string>;
+    category: string;
+    imageLinks: {
+        smallThumbnail?: string;
+        thumbnail?: string;
+    };
+};
+
+export type paginationType = {
+  startIndex: number;
+  maxResults: number;
+};
+export type sortType = 'relevance' | 'newest'
+export type categoryType = 'All' | 'Art' | 'Biography' | 'Computers' | 'History' | 'Medical' | 'Poetry'
+
 export interface IsGetSearchResult {
-    intitle: string
-    category?: string
-    pagination: paginationType
+  intitle: string | undefined;
+  category?: categoryType;
+  pagination: paginationType;
+  sort: sortType;
+  APIKey: string
+}
+export interface IsGetSelectedBook {
+  bookId: string,
+  APIKey: string
 }
 
-export interface IsFetchData { 
-    id: string;
-    volumeInfo: {
-        title: string;
-        authors: Array<string>
-        imageLinks: {
-            smallThumbnail:string,
-            thumbnail:string,
-            small:string,
-            medium:string,
-            large:string,
-            extraLarge:string
-        }
-        description: string,
-        categories: Array<string>,
-    }
-    
+export interface IsFetchData {
+  id: string;
+  volumeInfo: {
+    title: string;
+    authors: Array<string>;
+    categories: string;
+    imageLinks: {
+      smallThumbnail?: string;
+      thumbnail?: string;
+    };
+  };
 }

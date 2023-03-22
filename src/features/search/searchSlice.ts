@@ -1,39 +1,55 @@
 import { searchAPI } from "./searchAPI";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  combineReducers,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
 import {
   IsSearchState,
   IsGetSearchResult,
-  bookType,
   IsFetchData,
+  IsGetSelectedBook,
+  bookCardType,
+  selectedBookType,
 } from "./../../models/models";
 
 const initialState: IsSearchState = {
   foundData: {
     books: [],
-    totalItems: 0,
+    totalItems: undefined,
     pagination: {
       startIndex: 0,
       maxResults: 30,
     },
   },
-  selectedBookId: undefined,
+  selectedBook: undefined,
   status: "idle",
   APIKey: "",
-};
-
-type item = {
-  volumeInfo: {
-    title: string;
-  };
+  categories: ['All', 'Art', 'Biography', 'Computers', 'History', 'Medical', 'Poetry'],
+  sortValues: ['relevance', 'newest']
 };
 
 export const getSearchResult = createAsyncThunk(
   "search/getSearchResult",
-  async ({ intitle, category, pagination }: IsGetSearchResult) => {
+  async ({ intitle, category, pagination, sort, APIKey }: IsGetSearchResult) => {
     const response = await searchAPI.getSearchResult({
       intitle,
       category,
       pagination,
+      sort,
+      APIKey
+    });
+    return response.data;
+  }
+);
+
+export const getSelectedBook = createAsyncThunk(
+  "search/getSelectedBook",
+  async ({ bookId, APIKey }: IsGetSelectedBook) => {
+    const response = await searchAPI.getSelectedBook({
+      bookId,
+      APIKey
     });
     return response.data;
   }
@@ -42,33 +58,53 @@ export const getSearchResult = createAsyncThunk(
 export const searchSlice = createSlice({
   name: "search",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedBook: (state, action: PayloadAction<string>) => {
+      
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getSearchResult.pending, (state) => {
       state.status = "loading";
     });
-    
+
     builder.addCase(getSearchResult.fulfilled, (state, action) => {
-      state.status = "idle";
-      const data: bookType[] = [];
-      action.payload.items.map((book: IsFetchData | undefined) => {
-        if (book) {
-          const bookObject: bookType = {
+      state.foundData.totalItems = action.payload.totalItems
+      const data: bookCardType[] = [];
+      if (action.payload.totalItems > 0){
+        action.payload.items?.map((book: IsFetchData ) => {
+          const bookObject: bookCardType = {
             id: book.id,
             title: book.volumeInfo.title,
             authors: book.volumeInfo.authors,
-            categories: book.volumeInfo.categories,
-            description: book.volumeInfo.description,
+            category: book.volumeInfo.categories,
             imageLinks: {
-              small: book.volumeInfo.imageLinks.small,
-              medium: book.volumeInfo.imageLinks.medium,
-              large: book.volumeInfo.imageLinks.large,
+              smallThumbnail: book.volumeInfo.imageLinks?.smallThumbnail,
+              thumbnail: book.volumeInfo.imageLinks?.thumbnail
             },
           };
-          data.push(bookObject);
-        }
-      });
+          data.push(bookObject)
+      });}
       state.foundData.books = data;
+      state.status = "idle";
+    });
+
+    builder.addCase(getSelectedBook.fulfilled, (state, action) => {
+      state.status = "idle";
+      const book = action.payload
+      const data:selectedBookType = {
+        id: book.id,
+        title: book.volumeInfo.title,
+        categories: book.volumeInfo.categories,
+        authors: book.volumeInfo.authors,
+        description: book.volumeInfo.description,
+        imageLinks: {
+          large: book.volumeInfo.imageLinks.large,
+          medium:book.volumeInfo.imageLinks.medium,
+          small:book.volumeInfo.imageLinks.small
+        }
+      }
+      state.selectedBook = data
     });
 
     builder.addCase(getSearchResult.rejected, (state) => {
@@ -77,5 +113,5 @@ export const searchSlice = createSlice({
   },
 });
 
-export const {} = searchSlice.actions;
+export const { setSelectedBook } = searchSlice.actions;
 export default searchSlice.reducer;

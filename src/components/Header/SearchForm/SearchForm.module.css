@@ -1,0 +1,55 @@
+.searchForm {
+  margin: 20px 0;
+}
+
+.inTitleInput {
+  display: flex;
+  justify-content: center;
+}
+
+.inTitleInput_input {
+  width: 40%;
+  font-size: 20px;
+  margin: 0;
+  border: none;
+  background-color: white;
+}
+.inTitleInput_input:focus {
+  outline: none;
+}
+
+.inTitleInput_btn {
+  margin: 0;
+  border: none;
+  background-color: white;
+}
+
+.inTitleInput_btnImg {
+  width: 25px;
+}
+
+.selectSearchOptionsList {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.selectSearchOptionsElem {
+  margin: 0 20px;
+}
+
+.selectSearchOptionsElem_title {
+  font-size: 20px;
+  margin: 0 10px;
+}
+
+.selectSearchOptionsElem_select {
+  font-size: 15px;
+  padding: 5px 10px;
+}
+.selectSearchOptionsElem_select:focus {
+  outline: none;
+}
+
+.selectSearchOptionsElem_option {
+}
