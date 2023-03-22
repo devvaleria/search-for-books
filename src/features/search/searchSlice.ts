@@ -13,6 +13,7 @@ import {
   IsGetSelectedBook,
   bookCardType,
   selectedBookType,
+  paginationType,
 } from "./../../models/models";
 
 const initialState: IsSearchState = {
@@ -24,6 +25,11 @@ const initialState: IsSearchState = {
       maxResults: 30,
     },
   },
+  currentInfoForSearch: {
+    title: '',
+    category: 'All',
+    sortingBy: 'relevance'
+  },
   selectedBook: undefined,
   status: "idle",
   APIKey: "",
@@ -33,14 +39,38 @@ const initialState: IsSearchState = {
 
 export const getSearchResult = createAsyncThunk(
   "search/getSearchResult",
-  async ({ intitle, category, pagination, sort, APIKey }: IsGetSearchResult) => {
+  async ({ intitle, category, pagination, sort, APIKey }: IsGetSearchResult, {dispatch}) => {
+    const newPagination:paginationType = {
+      startIndex: 0,
+      maxResults: pagination.maxResults
+    }
+    dispatch(setCurrentInfoForSearch({title: intitle, sortingBy: sort, category}))
     const response = await searchAPI.getSearchResult({
       intitle,
       category,
-      pagination,
+      pagination: newPagination,
       sort,
       APIKey
     });
+    dispatch(resetPagitation())
+    return response.data;
+  }
+);
+export const loadMoreResults = createAsyncThunk(
+  "search/loadMoreResults",
+  async ({ intitle, category, pagination, sort, APIKey }: IsGetSearchResult, {dispatch}) => {
+    const newPagination:paginationType = {
+      startIndex: pagination.startIndex + 30,
+      maxResults: pagination.maxResults
+    }
+    const response = await searchAPI.getSearchResult({
+      intitle,
+      category,
+      pagination: newPagination,
+      sort,
+      APIKey
+    });
+    dispatch(setNextPagitation())
     return response.data;
   }
 );
@@ -52,6 +82,7 @@ export const getSelectedBook = createAsyncThunk(
       bookId,
       APIKey
     });
+    console.log(response.data)
     return response.data;
   }
 );
@@ -88,12 +119,26 @@ export const searchSlice = createSlice({
     setAPIKey: (state, action: PayloadAction<string>) => {
       state.APIKey = action.payload
     },
+    setNextPagitation: (state) => {
+      state.foundData.pagination.startIndex += 30
+    },
+    resetPagitation: (state) => {
+      state.foundData.pagination.startIndex = 0
+    },
+    setCurrentInfoForSearch: (state, action) => {
+      state.currentInfoForSearch.category = action.payload.category
+      state.currentInfoForSearch.sortingBy = action.payload.sortingBy
+      state.currentInfoForSearch.title = action.payload.title
+    }
     
   },
   extraReducers: (builder) => {
     builder.addCase(getSearchResult.pending, (state) => {
       state.status = "loading";
     });
+    builder.addCase(loadMoreResults.pending, (state) => {
+      state.status = 'loading'
+    })
 
     builder.addCase(getSearchResult.fulfilled, (state, action) => {
       state.foundData.totalItems = action.payload.totalItems
@@ -126,13 +171,33 @@ export const searchSlice = createSlice({
         authors: book.volumeInfo.authors,
         description: book.volumeInfo.description,
         imageLinks: {
-          large: book.volumeInfo.imageLinks.large,
-          medium:book.volumeInfo.imageLinks.medium,
-          small:book.volumeInfo.imageLinks.small
+          large: book.volumeInfo.imageLinks?.large,
+          medium:book.volumeInfo.imageLinks?.medium,
+          small:book.volumeInfo.imageLinks?.small
         }
       }
       state.selectedBook = data
     });
+
+    builder.addCase(loadMoreResults.fulfilled, (state, action) => {
+      const data: bookCardType[] = [];
+      if (action.payload.totalItems > 0){
+        action.payload.items?.map((book: IsFetchData ) => {
+          const bookObject: bookCardType = {
+            id: book.id,
+            title: book.volumeInfo.title,
+            authors: book.volumeInfo.authors,
+            category: book.volumeInfo.categories,
+            imageLinks: {
+              smallThumbnail: book.volumeInfo.imageLinks?.smallThumbnail,
+              thumbnail: book.volumeInfo.imageLinks?.thumbnail
+            },
+          };
+          data.push(bookObject)
+      });}
+      data.map(item => state.foundData.books.push(item))
+      state.status = "idle";
+    })
 
     builder.addCase(getSearchResult.rejected, (state) => {
       state.status = "failed";
@@ -140,5 +205,5 @@ export const searchSlice = createSlice({
   },
 });
 
-export const { setAPIKey } = searchSlice.actions;
+export const { setAPIKey, setNextPagitation, setCurrentInfoForSearch, resetPagitation } = searchSlice.actions;
 export default searchSlice.reducer;

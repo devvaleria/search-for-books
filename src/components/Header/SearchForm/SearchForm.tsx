@@ -28,11 +28,14 @@ function SearchForm() {
   return (
     <div className={style.searchForm}>
       <div className={style.inTitleInput}>
-        <input value={text} onChange={(e) => setText(e.target.value)} className={style.inTitleInput_input} type="text" />
+        <input onKeyDown={(e) => {if (e.key === 'Enter') {
+            searching(text, selectedCategory, selectedSortingBy) 
+          }}} value={text} onChange={(e) => setText(e.target.value)} className={style.inTitleInput_input} type="text" />
         <button
           onClick={() => {
-            searching(text, selectedCategory, selectedSortingBy);
+            searching(text, selectedCategory, selectedSortingBy) 
           }}
+          
           className={style.inTitleInput_btn}
         >
           <img className={style.inTitleInput_btnImg} src={img} />

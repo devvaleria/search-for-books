@@ -1,0 +1,26 @@
+.foundBookCards{
+    margin-bottom: 150px;
+}
+
+.foundBookCardsContainer_listElements{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.foundBookCardsContainer_list{
+    padding-top: 20px;
+}
+
+.foundBookCardsContainer_loadModeBtn{
+    background-color: antiquewhite;
+    border: none;
+    font-size: 20px;
+    padding: 20px 40px;
+}
+
+.foundBookCardsContainer_foundResults{
+    margin: 0;
+    font-size: 20px;
+    margin: 10px 0;
+}
