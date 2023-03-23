@@ -9,17 +9,20 @@
 }
 
 .inTitleInput_input {
+  padding: 5px 10px;
   width: 40%;
   font-size: 20px;
   margin: 0;
   border: none;
   background-color: white;
 }
+
 .inTitleInput_input:focus {
   outline: none;
 }
 
 .inTitleInput_btn {
+  cursor: pointer;
   margin: 0;
   border: none;
   background-color: white;

@@ -8,7 +8,8 @@ function ResetAPIKeyBtn() {
     const APIKeyPrompt = prompt("Your API key: ");
     if (APIKeyPrompt) {
       dispatch(getUsersAPIKey(APIKeyPrompt));
-    } else alert(`API key cannot be empty. Try again.
+    } else
+      alert(`API key cannot be empty. Try again.
      Info: https://developers.google.com/books/docs/v1/using?hl=en#APIKey`);
   };
   return (

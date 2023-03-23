@@ -1,36 +1,36 @@
-.bookCard{
-    background-color: rgb(197, 191, 182);
-    padding: 20px;
-    width: 220px;
-    min-height: 350px;
-    margin: 20px 20px 40px 20px;
-    cursor: pointer;
+.bookCard {
+  background-color: rgb(197, 191, 182);
+  padding: 20px;
+  width: 220px;
+  min-height: 350px;
+  margin: 20px 20px 40px 20px;
+  cursor: pointer;
 }
 
-.bookCard_thumbnailImg{
-    height: 200px;
-    width: 130px;
+.bookCard_thumbnailImg {
+  height: 200px;
+  width: 130px;
 }
 
-.bookCard_textInfo{
-    text-align: left;
+.bookCard_textInfo {
+  text-align: left;
 }
 
-.bookCard_textInfo_category{
-    color: antiquewhite;
-    font-size: 16px;
-    text-decoration: underline;
-    margin: 5px 0;
+.bookCard_textInfo_category {
+  color: antiquewhite;
+  font-size: 16px;
+  text-decoration: underline;
+  margin: 5px 0;
 }
 
-.bookCard_textInfo_title{
-    font-weight: 400px;
-    font-size: 18px;
-    margin: 10px 0 5px 0;
+.bookCard_textInfo_title {
+  font-weight: 400px;
+  font-size: 18px;
+  margin: 10px 0 5px 0;
 }
 
-.bookCard_textInfo_authors{
-    color: antiquewhite;
-    font-size: 16px;
-    margin: 10px 0 10px 0;
+.bookCard_textInfo_authors {
+  color: antiquewhite;
+  font-size: 16px;
+  margin: 10px 0 10px 0;
 }

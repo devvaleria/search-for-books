@@ -7,14 +7,22 @@ const instance = axios.create({
 });
 
 export const searchAPI = {
-  getSearchResult({ intitle, category, pagination, sort, APIKey }: IsGetSearchResult) {
+  getSearchResult({
+    intitle,
+    category,
+    pagination,
+    sort,
+    APIKey,
+  }: IsGetSearchResult) {
     return instance.get(
-      `volumes?q=${category === 'All' ? '' : "+subject:" + category}${"+intitle:" + intitle}&startIndex=${pagination.startIndex}&maxResults=${pagination.maxResults}&orderBy=${sort}&key=${APIKey}`
+      `volumes?q=${category === "All" ? "" : "+subject:" + category}${
+        "+intitle:" + intitle
+      }&startIndex=${pagination.startIndex}&maxResults=${
+        pagination.maxResults
+      }&orderBy=${sort}&key=${APIKey}`
     );
   },
-  getSelectedBook({ bookId, APIKey }: IsGetSelectedBook ) {
-    return instance.get(
-        `volumes/${bookId}?key=${APIKey}`
-    )
-  }
+  getSelectedBook({ bookId, APIKey }: IsGetSelectedBook) {
+    return instance.get(`volumes/${bookId}?key=${APIKey}`);
+  },
 };

@@ -1,8 +1,9 @@
-.header{
-    background-color: #7a7474;
-    padding: 30px;
+.header {
+  background-color: #7a7474;
+  padding: 30px;
 }
 
-.header_title{
-    font-size: 35px;
+.header_title {
+  cursor: pointer;
+  font-size: 35px;
 }
