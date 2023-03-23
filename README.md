@@ -9,3 +9,7 @@
   
 ![image](https://user-images.githubusercontent.com/94675218/227275488-bff719f5-5720-4e6d-ba69-6762ac942dd1.png)
 ![image](https://user-images.githubusercontent.com/94675218/227276086-385ecafb-ea97-4f36-a59b-fea94090f117.png)
+
+- react
+- redux toolkit
+- axios
